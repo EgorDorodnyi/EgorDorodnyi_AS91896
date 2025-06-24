@@ -1,4 +1,5 @@
 #Importing files and information
+import random
 import pygame
 from Setting import *
 
@@ -19,8 +20,13 @@ class Tile:
         self.falgged = flagged
 
 
-    def draw(self, board_surface):    
-        board_surface.blit(Tile_unknown, (self.x, self.y))
+    def draw(self, board_surface):   
+        if not self.falgged and self.revealed:
+            board_surface.blit(self.image, (self.x, self.y))
+        elif self.falgged and not self.revealed:
+             board_surface.blit(Tile_flag, (self.x, self.y))
+        elif not self.revealed:
+             board_surface.blit(Tile_unknown, (self.x, self.y))
 
     def __repr__(self):
         return self.type
@@ -28,14 +34,54 @@ class Tile:
 
 class Board:
     def __init__(self):
-        self.board_top = pygame.Surface((Width, Height))
-        self.board_list = [[Tile(col, Row, Tile_empty, "?") for Row in range(Rows)] for col in range(Columns)]
+        self.board_surface = pygame.Surface((Width, Height))
+        self.board_list = [[Tile(col, row, Tile_unknown, "?") for row in range(Rows)] for col in range(Columns)]
+        self.place_mines()
+        self.place_clues()
 
+    def place_mines(self):
+         for _ in range(Amount_mines):
+              while True:
+                   x = random.randint(0, Rows-1)
+                   y = random.randint(0, Columns-1)
+
+                   if self.board_list[x][y].type == "?":
+                    self.board_list[x][y].image = Tile_mine
+                    self.board_list[x][y].type = "X"
+                    break
+              
+
+    def place_clues(self):
+         for x in range(Rows):
+              for y in range(Columns):
+                   if self.board_list[x][y].type != "X":
+                        total_mines = self.check_nearby(x, y)
+                        if total_mines > 0:
+                             self.board_list[x][y].image = Tile_num[total_mines-1]
+                             self.board_list[x][y].type = "C"
+              
+    
+    @staticmethod
+    def is_inside(x, y):
+         return 0 <= x < Rows and 0 <= y < Columns
+
+
+    def check_nearby(self, x, y):
+        total_mines = 0
+        for x_offset in range(-1, 2):
+             for y_offset in range(-1, 2):
+                  nearby_x = x + x_offset
+                  nearby_y = y + y_offset
+                  if self.is_inside(nearby_x, nearby_y) and self.board_list[nearby_x][nearby_y].type == "X":
+                       total_mines += 1
+
+        return total_mines
+    
 
     def draw(self, screen):
          for row in self.board_list:
               for tile in row:
-                   tile.draw(self.board_top)
+                   tile.draw(self.board_surface)
          screen.blit(self.board_surface, (0, 0))
 
 

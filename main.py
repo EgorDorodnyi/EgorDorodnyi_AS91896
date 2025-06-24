@@ -21,7 +21,9 @@ class Game:
 
     def draw(self):
         self.screen.fill(BGcolor)
+        self.board.draw(self.screen)
         pygame.display.flip()
+
 
     def events(self):
         for event in pygame.event.get():
@@ -29,12 +31,28 @@ class Game:
                 pygame.quit()
                 quit(0)
 
+            if event == pygame.MOUSEBUTTONDOWN:
+                mx, my = pygame.mouse.get_pos()
+                mx //= Tile_size
+                my //= Tile_size
+
+                if event.button == 1:
+                    if not self.board.board_list[mx][my].falgged:
+                        # revels(digs) tile and checks if it is a bomb and sees if it explodes
+                        pass
+
+                if event.button == 3:
+                    if not self.board.board_list[mx][my].revealed:
+                        self.board.board_list[mx][my].falgged = not self.board.board_list[mx][my].falgged
+            
+
 
 
 game = Game()
-game.new() 
-game.run() 
+game.new()
+while True: 
+    game.run() 
 
 
-pygame.quit()
-quit(0)
+
+
