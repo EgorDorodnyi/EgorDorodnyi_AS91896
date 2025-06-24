@@ -17,13 +17,14 @@ class Tile:
         self.image = image
         self.type = type
         self.revealed = revealed
-        self.falgged = flagged
+        self.flagged = flagged
+
 
 
     def draw(self, board_surface):   
-        if not self.falgged and self.revealed:
+        if not self.flagged and self.revealed:
             board_surface.blit(self.image, (self.x, self.y))
-        elif self.falgged and not self.revealed:
+        elif self.flagged and not self.revealed:
              board_surface.blit(Tile_flag, (self.x, self.y))
         elif not self.revealed:
              board_surface.blit(Tile_unknown, (self.x, self.y))
@@ -31,13 +32,15 @@ class Tile:
     def __repr__(self):
         return self.type
 
-
+# this is the construcot. It build and places the tiles
 class Board:
     def __init__(self):
         self.board_surface = pygame.Surface((Width, Height))
-        self.board_list = [[Tile(col, row, Tile_unknown, "?") for row in range(Rows)] for col in range(Columns)]
+        self.board_list = [[Tile(col, row, Tile_empty, "?") for row in range(Rows)] for col in range(Columns)]
         self.place_mines()
         self.place_clues()
+        self.dug = []
+
 
     def place_mines(self):
          for _ in range(Amount_mines):
@@ -84,9 +87,25 @@ class Board:
                    tile.draw(self.board_surface)
          screen.blit(self.board_surface, (0, 0))
 
+    def dig(self, x, y):
+          self.dug.append((x, y))
+          if self.board_list[x][y].type == "X":
+               self.board_list[x][y].revealed = True
+               self.board_list[x][y].image = Tile_mine
+               return False
+          elif self.board_list[x][y].type == "C":
+               self.board_list[x][y].revealed = True
+               return True
 
+          self.board_list[x][y].revealed = True
 
+          for row in range(max(0, x-1), min(Rows-1, x+1)+1):
+               for col in range(max(0, y-1), min(Columns-1, y+1)+1):
+                    if (row, col) not in self.dug:
+                         self.dig(row, col)
+          return True
 
+         
 
     def display_board(self):
             for row in self.board_list:

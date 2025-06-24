@@ -14,18 +14,26 @@ BGcolor = Dark_grey
 
 #Game setting
 #this will be used to modify the size, amount of mines and title of the game.
-#you can change difficty by modifing the size of the colloum
+#Explanation is down bellow, order of recomended diffictly goes: Rows by Columns abd then by mines
 
-#easy level:
+# Format of setting is
+# Rows = how much tiles you want in width
+# Columns = how much times you want in length
+# Amount mines = how much mines you want in the board.
+
+#Beginer:
 # 9 by 9, 10 mines
 
 #Intermedate level:
-# 16 by 16, 40
+# 16 by 16, 40 mines
+
+#Insane level
+# 30 by 16, 99 mines
 
 Tile_size = 32
 Rows = 10
-Columns = 10
-Amount_mines = 13
+Columns = 7
+Amount_mines = 5
 Width = Tile_size * Rows
 Height = Tile_size * Columns
 FPS = 60

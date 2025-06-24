@@ -15,14 +15,27 @@ class Game:
         self.board.display_board()
 
     def run(self):
-        self.clock.tick(FPS)
-        self.events()
-        self.draw()
+        self.playing = True
+        while self.playing:
+            self.clock.tick(FPS)
+            self.events()
+            self.draw()
+        else:
+            self.end_screen()
+
 
     def draw(self):
         self.screen.fill(BGcolor)
         self.board.draw(self.screen)
         pygame.display.flip()
+
+    def check_win(self):
+        for row in self.board.board_list:
+            for tile in row:
+                if tile.type != "X" and tile.revealed:
+                    return False
+        return True
+
 
 
     def events(self):
@@ -31,27 +44,54 @@ class Game:
                 pygame.quit()
                 quit(0)
 
-            if event == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 mx, my = pygame.mouse.get_pos()
                 mx //= Tile_size
                 my //= Tile_size
 
                 if event.button == 1:
-                    if not self.board.board_list[mx][my].falgged:
+                    if not self.board.board_list[mx][my].flagged:
                         # revels(digs) tile and checks if it is a bomb and sees if it explodes
-                        pass
+                        if not self.board.dig(mx, my):
+                            # Kaboom
+                            for row in self.board.board_list:
+                                for tile in row:
+                                    if tile.flagged and tile.type != "X":
+                                        tile.flagged = False
+                                        tile.revealed = True
+                                        tile.image = Tile_not_bomb
+                                    elif tile.type == "X":
+                                        tile.revealed = True
+                            self.playing = True
 
                 if event.button == 3:
                     if not self.board.board_list[mx][my].revealed:
-                        self.board.board_list[mx][my].falgged = not self.board.board_list[mx][my].falgged
-            
+                        self.board.board_list[mx][my].flagged = not self.board.board_list[mx][my].flagged
+
+                if self.check_win:
+                    self.win = True
+                    self.playing = False
+                    for row in self.board.board_list:
+                        for tile in row:
+                            if not tile.revealed:
+                                tile.flagged = True 
 
 
+    def end_screen(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit(0)
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    return
 
 game = Game()
-game.new()
+
 while True: 
-    game.run() 
+    game.new()
+    game.run()
 
 
 
