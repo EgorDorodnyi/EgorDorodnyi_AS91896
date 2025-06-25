@@ -36,7 +36,7 @@ class Tile:
 class Board:
     def __init__(self):
         self.board_surface = pygame.Surface((Width, Height))
-        self.board_list = [[Tile(col, row, Tile_empty, "?") for row in range(Rows)] for col in range(Columns)]
+        self.board_list = [[Tile(x, y, Tile_empty, "?") for y in range(Columns)] for x in range(Rows)]
         self.place_mines()
         self.place_clues()
         self.dug = []
@@ -49,9 +49,9 @@ class Board:
                    y = random.randint(0, Columns-1)
 
                    if self.board_list[x][y].type == "?":
-                    self.board_list[x][y].image = Tile_mine
-                    self.board_list[x][y].type = "X"
-                    break
+                         self.board_list[x][y].image = Tile_mine
+                         self.board_list[x][y].type = "X"
+                         break
               
 
     def place_clues(self):
@@ -91,7 +91,7 @@ class Board:
           self.dug.append((x, y))
           if self.board_list[x][y].type == "X":
                self.board_list[x][y].revealed = True
-               self.board_list[x][y].image = Tile_mine
+               self.board_list[x][y].image = Tile_boom
                return False
           elif self.board_list[x][y].type == "C":
                self.board_list[x][y].revealed = True

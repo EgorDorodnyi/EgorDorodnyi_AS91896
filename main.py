@@ -32,7 +32,7 @@ class Game:
     def check_win(self):
         for row in self.board.board_list:
             for tile in row:
-                if tile.type != "X" and tile.revealed:
+                if tile.type != "X" and not tile.revealed:
                     return False
         return True
 
@@ -62,13 +62,13 @@ class Game:
                                         tile.image = Tile_not_bomb
                                     elif tile.type == "X":
                                         tile.revealed = True
-                            self.playing = True
+                            self.playing = False
 
                 if event.button == 3:
                     if not self.board.board_list[mx][my].revealed:
                         self.board.board_list[mx][my].flagged = not self.board.board_list[mx][my].flagged
 
-                if self.check_win:
+                if self.check_win():
                     self.win = True
                     self.playing = False
                     for row in self.board.board_list:
@@ -88,7 +88,6 @@ class Game:
                     return
 
 game = Game()
-
 while True: 
     game.new()
     game.run()
