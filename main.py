@@ -3,17 +3,19 @@ import pygame
 from Setting import *
 from Sprite import *
 
+#we are know defling the game and making the window that the game will be played on
 
 class Game:
     def __init__(self):
         self.screen = pygame.display.set_mode((Width, Height))
         pygame.display.set_caption(Title)
         self.clock = pygame.time.Clock()
-
+#We are taking the Board class form the Sprite.py that contains the genaration and how the board looks
     def new(self):
         self.board = Board()
         self.board.display_board()
 
+#Here we are making the run functions so that it allows us to stop the game and make a tick cycle.
     def run(self):
         self.playing = True
         while self.playing:
@@ -23,12 +25,13 @@ class Game:
         else:
             self.end_screen()
 
-
+#this is what males the background of the boared.
     def draw(self):
         self.screen.fill(BGcolor)
         self.board.draw(self.screen)
         pygame.display.flip()
 
+#this is what is used to determin if all the mines have been flagged
     def check_win(self):
         for row in self.board.board_list:
             for tile in row:
