@@ -35,7 +35,7 @@ BGcolor = Dark_grey
 Tile_size = 32
 Rows = 9
 Columns = 9
-Amount_mines = 5
+Amount_mines = 10
 
 # !!!Dont touch these!!!
 #they are used todetermin how the grid is made, as well it has the title ans fps cap

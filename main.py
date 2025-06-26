@@ -67,6 +67,8 @@ class Game:
                                         tile.revealed = True
                             self.playing = False
 
+#This is used for left clicking. When the user left clicks they make the tile a flag
+#when flaged it does not allow the user to revel the mine, and if they die and the flag was not on a mine it will show
                 if event.button == 3:
                     if not self.board.board_list[mx][my].revealed:
                         self.board.board_list[mx][my].flagged = not self.board.board_list[mx][my].flagged
